@@ -14,9 +14,7 @@ export async function getReviews(bookId: number, params: ReviewListParams = {}):
   if (params.size !== undefined) searchParams.set("size", String(params.size));
 
   const qs = searchParams.toString();
-  return apiFetch<ReviewPage>(`/books/${bookId}/reviews${qs ? `?${qs}` : ""}`, {
-    skipAuth: true,
-  });
+  return apiFetch<ReviewPage>(`/books/${bookId}/reviews${qs ? `?${qs}` : ""}`);
 }
 
 export async function createReview(bookId: number, data: CreateReviewRequest): Promise<Review> {

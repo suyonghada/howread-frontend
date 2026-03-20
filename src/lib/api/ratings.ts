@@ -11,7 +11,7 @@ export async function getMyRating(bookId: number): Promise<Rating | null> {
 
 export async function upsertRating(bookId: number, data: UpsertRatingRequest): Promise<Rating> {
   return apiFetch<Rating>(`/books/${bookId}/ratings`, {
-    method: "POST",
+    method: "PUT",
     body: data,
   });
 }

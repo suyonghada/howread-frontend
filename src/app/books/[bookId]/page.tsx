@@ -116,7 +116,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
               {isAuthenticated ? "내 평점" : "평점 (로그인 필요)"}
             </p>
             <StarRating
-              value={myRating?.score ?? 0}
+              value={myRating?.rating ?? 0}
               onChange={handleRatingChange}
               readonly={!isAuthenticated}
               size="lg"
