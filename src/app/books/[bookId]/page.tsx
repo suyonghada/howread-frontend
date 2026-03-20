@@ -90,6 +90,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
               src={getHighResAladinThumbnail(book.thumbnailUrl) ?? book.thumbnailUrl}
               alt={book.title}
               fill
+              priority
               className="object-cover rounded-lg shadow-md"
               sizes="160px"
             />
