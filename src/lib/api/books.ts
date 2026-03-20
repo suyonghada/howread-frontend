@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import { Book, BookSearchResult, RegisterBookRequest } from "@/types/book";
+import { Book, BookSearchResponse, RegisterBookRequest } from "@/types/book";
 import { CursorPage, Page } from "@/types/api";
 
 export interface BookListParams {
@@ -10,8 +10,8 @@ export interface BookListParams {
   size?: number;
 }
 
-export async function searchBooks(query: string): Promise<BookSearchResult> {
-  return apiFetch<BookSearchResult>(`/books/search?query=${encodeURIComponent(query)}`, {
+export async function searchBooks(query: string): Promise<BookSearchResponse[]> {
+  return apiFetch<BookSearchResponse[]>(`/books/search?query=${encodeURIComponent(query)}`, {
     skipAuth: true,
   });
 }

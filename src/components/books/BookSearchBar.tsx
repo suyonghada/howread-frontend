@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Loader2 } from "lucide-react";
 import { searchBooks, registerBook } from "@/lib/api/books";
-import { KakaoBook } from "@/types/book";
+import { BookSearchResponse } from "@/types/book";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ import { ApiError } from "@/types/api";
 
 export function BookSearchBar() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<KakaoBook[]>([]);
+  const [results, setResults] = useState<BookSearchResponse[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [registeringIsbn, setRegisteringIsbn] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export function BookSearchBar() {
       setIsSearching(true);
       try {
         const data = await searchBooks(q);
-        setResults(data.books ?? []);
+        setResults(data ?? []);
         setIsOpen(true);
       } catch {
         setResults([]);
@@ -55,7 +55,7 @@ export function BookSearchBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleRegisterAndView = async (book: KakaoBook) => {
+  const handleRegisterAndView = async (book: BookSearchResponse) => {
     setRegisteringIsbn(book.isbn);
     try {
       const registered = await registerBook({ isbn: book.isbn });
@@ -96,9 +96,9 @@ export function BookSearchBar() {
               key={book.isbn}
               className="flex items-start gap-3 p-3 hover:bg-muted border-b last:border-b-0"
             >
-              {book.thumbnail && (
+              {book.thumbnailUrl && (
                 <Image
-                  src={book.thumbnail}
+                  src={book.thumbnailUrl}
                   alt={book.title}
                   width={40}
                   height={56}
@@ -107,7 +107,7 @@ export function BookSearchBar() {
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium line-clamp-1">{book.title}</p>
-                <p className="text-xs text-muted-foreground">{book.authors.join(", ")}</p>
+                <p className="text-xs text-muted-foreground">{book.author}</p>
               </div>
               <Button
                 size="sm"
