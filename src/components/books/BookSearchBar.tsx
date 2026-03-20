@@ -9,7 +9,7 @@ import { BookSearchResponse } from "@/types/book";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { debounce } from "@/lib/utils";
+import { debounce, getHighResAladinThumbnail } from "@/lib/utils";
 import { ApiError } from "@/types/api";
 import { useAuth } from "@/store/auth";
 
@@ -108,7 +108,7 @@ export function BookSearchBar({ onRegisterSuccess }: BookSearchBarProps) {
             >
               {book.thumbnailUrl && (
                 <Image
-                  src={book.thumbnailUrl}
+                  src={getHighResAladinThumbnail(book.thumbnailUrl) ?? book.thumbnailUrl}
                   alt={book.title}
                   width={40}
                   height={56}

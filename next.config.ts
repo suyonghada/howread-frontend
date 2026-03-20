@@ -2,14 +2,15 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "search1.kakaocdn.net",
+        hostname: "*.aladin.co.kr",
       },
       {
         protocol: "https",
-        hostname: "**.kakaocdn.net",
+        hostname: "aladin.co.kr",
       },
     ],
   },
