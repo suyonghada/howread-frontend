@@ -5,11 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "search1.kakaocdn.net",
-      },
-      {
-        protocol: "https",
-        hostname: "**.kakaocdn.net",
+        hostname: "**.aladin.co.kr",
       },
     ],
   },
