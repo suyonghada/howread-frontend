@@ -39,12 +39,18 @@ export async function register(data: RegisterRequest): Promise<AuthTokens> {
   });
 }
 
-export async function checkEmailDuplicate(email: string): Promise<{ available: boolean }> {
-  return apiFetch<{ available: boolean }>("/auth/email/check", {
-    method: "POST",
-    body: { email },
-    skipAuth: true,
-  });
+// Returns true if available, false if already taken
+export async function checkEmailDuplicate(email: string): Promise<boolean> {
+  try {
+    await apiFetch<void>("/auth/email/check", {
+      method: "POST",
+      body: { email },
+      skipAuth: true,
+    });
+    return true; // success = not duplicate
+  } catch {
+    return false; // ApiError = duplicate
+  }
 }
 
 export async function forgotPassword(email: string): Promise<void> {

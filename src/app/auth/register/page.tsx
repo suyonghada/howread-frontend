@@ -45,7 +45,7 @@ export default function RegisterPage() {
   const handleEmailSubmit = async (data: EmailFormData) => {
     try {
       // Check duplicate
-      const { available } = await checkEmailDuplicate(data.email);
+      const available = await checkEmailDuplicate(data.email);
       if (!available) {
         emailForm.setError("email", { message: "이미 사용 중인 이메일입니다" });
         return;
