@@ -29,6 +29,11 @@ export function formatRelativeTime(dateString: string): string {
   return formatDate(dateString);
 }
 
+export function getHighResAladinThumbnail(url: string | null): string | null {
+  if (!url) return null;
+  return url.replace(/\/cover\d+\//, "/cover500/");
+}
+
 export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(
   fn: T,
   delay: number

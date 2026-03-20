@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { getBook } from "@/lib/api/books";
 import { useRating } from "@/hooks/useRating";
 import { useAuth } from "@/store/auth";
@@ -9,10 +10,11 @@ import { StarRating } from "@/components/books/StarRating";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { BookOpen, Star } from "lucide-react";
 import { toast } from "sonner";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getHighResAladinThumbnail } from "@/lib/utils";
 
 interface BookDetailPageProps {
   params: Promise<{ bookId: string }>;
@@ -22,8 +24,9 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
   const { bookId } = use(params);
   const id = parseInt(bookId, 10);
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-  const { data: book, isLoading } = useQuery({
+  const { data: book, isLoading, isError } = useQuery({
     queryKey: ["book", id],
     queryFn: () => getBook(id),
     enabled: !!id,
@@ -60,6 +63,15 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center space-y-3">
+        <p className="text-muted-foreground">도서 정보를 불러오지 못했습니다</p>
+        <Button variant="outline" onClick={() => router.back()}>뒤로 가기</Button>
+      </div>
+    );
+  }
+
   if (!book) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
@@ -75,7 +87,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
         <div className="relative w-40 h-60 shrink-0 mx-auto sm:mx-0">
           {book.thumbnailUrl ? (
             <Image
-              src={book.thumbnailUrl}
+              src={getHighResAladinThumbnail(book.thumbnailUrl) ?? book.thumbnailUrl}
               alt={book.title}
               fill
               className="object-cover rounded-lg shadow-md"
