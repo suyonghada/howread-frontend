@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import { BookList } from "@/components/books/BookList";
-import { BookSearchBar } from "@/components/books/BookSearchBar";
+import { AddBookDialog } from "@/components/books/AddBookDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Search } from "lucide-react";
 
 export default function BooksPage() {
@@ -37,16 +36,11 @@ export default function BooksPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">도서 목록</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">도서 목록</h1>
+        <AddBookDialog />
+      </div>
 
-      {/* 새 도서 추가 */}
-      <p className="text-sm text-muted-foreground mb-2">새 도서 추가</p>
-      <BookSearchBar />
-
-      <Separator className="my-6" />
-
-      {/* DB 내 도서 검색 */}
-      <p className="text-sm text-muted-foreground mb-3">등록된 도서 검색</p>
       <form onSubmit={handleSearch} className="flex flex-wrap gap-3 mb-6 items-end">
         <div className="space-y-1">
           <Label htmlFor="title-search" className="text-xs">제목</Label>

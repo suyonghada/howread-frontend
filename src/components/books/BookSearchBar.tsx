@@ -11,8 +11,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { debounce } from "@/lib/utils";
 import { ApiError } from "@/types/api";
+import { useAuth } from "@/store/auth";
 
-export function BookSearchBar() {
+interface BookSearchBarProps {
+  onRegisterSuccess?: () => void;
+}
+
+export function BookSearchBar({ onRegisterSuccess }: BookSearchBarProps) {
+  const { isAuthenticated } = useAuth();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<BookSearchResponse[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -56,14 +62,18 @@ export function BookSearchBar() {
   }, []);
 
   const handleRegisterAndView = async (book: BookSearchResponse) => {
+    if (!isAuthenticated) {
+      toast.error("도서를 등록하려면 로그인이 필요합니다");
+      return;
+    }
     setRegisteringIsbn(book.isbn);
     try {
       const registered = await registerBook({ isbn: book.isbn });
       setIsOpen(false);
+      onRegisterSuccess?.();
       router.push(`/books/${registered.id}`);
     } catch (err) {
       if (err instanceof ApiError && err.code === "BOOK_ALREADY_EXISTS") {
-        // Try to search for existing book
         toast.info("이미 등록된 도서입니다. 도서 페이지로 이동합니다.");
       } else {
         toast.error("도서 등록에 실패했습니다");
@@ -74,7 +84,7 @@ export function BookSearchBar() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-2xl">
+    <div ref={containerRef} className="relative w-full">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
@@ -119,7 +129,7 @@ export function BookSearchBar() {
                 {registeringIsbn === book.isbn ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
-                  "보기"
+                  "추가"
                 )}
               </Button>
             </div>
