@@ -6,7 +6,7 @@ export interface BookListParams {
   query?: string;
   author?: string;
   isbn?: string;
-  cursor?: string;
+  cursor?: number;
   size?: number;
 }
 
@@ -21,7 +21,7 @@ export async function getBooks(params: BookListParams = {}): Promise<CursorPage<
   if (params.query) searchParams.set("query", params.query);
   if (params.author) searchParams.set("author", params.author);
   if (params.isbn) searchParams.set("isbn", params.isbn);
-  if (params.cursor) searchParams.set("cursor", params.cursor);
+  if (params.cursor !== undefined) searchParams.set("cursor", String(params.cursor));
   if (params.size) searchParams.set("size", String(params.size));
 
   const qs = searchParams.toString();
@@ -41,5 +41,5 @@ export async function registerBook(data: RegisterBookRequest): Promise<Book> {
 
 export async function getRecentBooks(size = 8): Promise<Book[]> {
   const result = await apiFetch<CursorPage<Book>>(`/books?size=${size}`, { skipAuth: true });
-  return result.content;
+  return result.data;
 }

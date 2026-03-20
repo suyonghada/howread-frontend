@@ -8,7 +8,6 @@ import { useAuth } from "@/store/auth";
 import { StarRating } from "@/components/books/StarRating";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { BookOpen, Star } from "lucide-react";
@@ -74,9 +73,9 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
       {/* Book Info */}
       <div className="flex flex-col sm:flex-row gap-6 mb-8">
         <div className="relative w-40 h-60 shrink-0 mx-auto sm:mx-0">
-          {book.coverImageUrl ? (
+          {book.thumbnailUrl ? (
             <Image
-              src={book.coverImageUrl}
+              src={book.thumbnailUrl}
               alt={book.title}
               fill
               className="object-cover rounded-lg shadow-md"
@@ -92,7 +91,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
         <div className="flex-1 space-y-3">
           <h1 className="text-2xl font-bold">{book.title}</h1>
           <p className="text-muted-foreground">
-            {book.authors.join(", ")} · {book.publisher}
+            {book.author} · {book.publisher}
           </p>
           {book.publishedDate && (
             <p className="text-sm text-muted-foreground">
@@ -109,7 +108,6 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
             <span className="text-sm text-muted-foreground">
               ({book.ratingCount}명 평가)
             </span>
-            <Badge variant="secondary">{book.reviewCount}개 리뷰</Badge>
           </div>
 
           {/* My Rating */}

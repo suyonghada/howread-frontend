@@ -5,8 +5,8 @@ export interface ApiResponse<T> {
 }
 
 export interface CursorPage<T> {
-  content: T[];
-  nextCursor: string | null;
+  data: T[];
+  nextCursor: number | null;
   hasNext: boolean;
 }
 

@@ -2,15 +2,13 @@ export interface Book {
   id: number;
   isbn: string;
   title: string;
-  authors: string[];
+  author: string;
   publisher: string;
   publishedDate: string;
   description: string;
-  coverImageUrl: string | null;
+  thumbnailUrl: string | null;
   averageRating: number;
   ratingCount: number;
-  reviewCount: number;
-  createdAt: string;
 }
 
 export interface KakaoBook {

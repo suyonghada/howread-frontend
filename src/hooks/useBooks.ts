@@ -5,8 +5,8 @@ export function useBookList(params: BookListParams = {}) {
   return useInfiniteQuery({
     queryKey: ["books", params],
     queryFn: ({ pageParam }) =>
-      getBooks({ ...params, cursor: pageParam as string | undefined, size: 20 }),
-    initialPageParam: undefined as string | undefined,
+      getBooks({ ...params, cursor: pageParam, size: 20 }),
+    initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 }

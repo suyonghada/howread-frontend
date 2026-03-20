@@ -14,9 +14,9 @@ export function BookCard({ book }: BookCardProps) {
     <Link href={`/books/${book.id}`}>
       <Card className="overflow-hidden hover:shadow-md transition-shadow h-full">
         <div className="relative aspect-[2/3] bg-muted">
-          {book.coverImageUrl ? (
+          {book.thumbnailUrl ? (
             <Image
-              src={book.coverImageUrl}
+              src={book.thumbnailUrl}
               alt={book.title}
               fill
               className="object-cover"
@@ -31,7 +31,7 @@ export function BookCard({ book }: BookCardProps) {
         <CardContent className="p-3">
           <h3 className="font-semibold text-sm line-clamp-2 mb-1">{book.title}</h3>
           <p className="text-xs text-muted-foreground line-clamp-1 mb-2">
-            {book.authors.join(", ")}
+            {book.author}
           </p>
           <div className="flex items-center gap-1">
             <StarRating value={book.averageRating} readonly size="sm" />

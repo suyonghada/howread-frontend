@@ -5,6 +5,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getBooks, BookListParams } from "@/lib/api/books";
 import { BookCard } from "./BookCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CursorPage } from "@/types/api";
+import { Book } from "@/types/book";
 
 interface BookListProps {
   params?: BookListParams;
@@ -22,8 +24,8 @@ export function BookList({ params = {} }: BookListProps) {
   } = useInfiniteQuery({
     queryKey: ["books", params],
     queryFn: ({ pageParam }) =>
-      getBooks({ ...params, cursor: pageParam as string | undefined, size: 20 }),
-    initialPageParam: undefined as string | undefined,
+      getBooks({ ...params, cursor: pageParam, size: 20 }),
+    initialPageParam: undefined as number | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 
@@ -58,7 +60,7 @@ export function BookList({ params = {} }: BookListProps) {
     );
   }
 
-  const books = data?.pages.flatMap((p) => p.content) ?? [];
+  const books = data?.pages.flatMap((p) => (p as CursorPage<Book>).data) ?? [];
 
   if (books.length === 0) {
     return (
