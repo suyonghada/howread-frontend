@@ -1,12 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { Review } from "@/types/review";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "./LikeButton";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
-import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { LoginDialog } from "@/components/auth/LoginDialog";
 
 interface ReviewCardProps {
   review: Review;
@@ -17,27 +24,40 @@ interface ReviewCardProps {
 }
 
 export function ReviewCard({ review, bookId, isOwner = false, onEdit, onDelete }: ReviewCardProps) {
+  const [loginOpen, setLoginOpen] = useState(false);
+
   if (review.isBlurred) {
     return (
-      <div className="relative border rounded-lg p-4 overflow-hidden">
-        <div className="blur-sm select-none pointer-events-none">
-          <div className="flex items-center gap-2 mb-2">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback>?</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm font-medium">회원 리뷰</p>
-              <p className="text-xs text-muted-foreground">방금 전</p>
+      <>
+        <div className="relative border rounded-lg p-4 overflow-hidden">
+          <div className="blur-sm select-none pointer-events-none">
+            <div className="flex items-center gap-2 mb-2">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback>?</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm font-medium">회원 리뷰</p>
+                <p className="text-xs text-muted-foreground">방금 전</p>
+              </div>
             </div>
+            <p className="text-sm">로그인 후 리뷰를 확인하세요. 이 리뷰의 내용은 회원만 볼 수 있습니다.</p>
           </div>
-          <p className="text-sm">로그인 후 리뷰를 확인하세요. 이 리뷰의 내용은 회원만 볼 수 있습니다.</p>
+          <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-[2px]">
+            <Button size="sm" onClick={() => setLoginOpen(true)}>
+              로그인하고 리뷰 보기
+            </Button>
+          </div>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-background/50 backdrop-blur-[2px]">
-          <Link href="/auth/login" className={buttonVariants({ size: "sm" })}>
-            로그인하고 리뷰 보기
-          </Link>
-        </div>
-      </div>
+
+        <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>로그인</DialogTitle>
+            </DialogHeader>
+            <LoginDialog onClose={() => setLoginOpen(false)} />
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 
