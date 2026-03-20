@@ -13,7 +13,7 @@ export function useRating(bookId: number) {
   });
 
   const upsertMutation = useMutation({
-    mutationFn: (score: number) => upsertRating(bookId, { score }),
+    mutationFn: (score: number) => upsertRating(bookId, { rating: score }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rating", bookId] });
       queryClient.invalidateQueries({ queryKey: ["book", bookId] });
