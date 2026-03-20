@@ -16,7 +16,7 @@ export async function logout(): Promise<void> {
 }
 
 export async function sendVerificationEmail(data: EmailVerificationRequest): Promise<void> {
-  return apiFetch<void>("/auth/email/send-verification", {
+  return apiFetch<void>("/auth/email/send-code", {
     method: "POST",
     body: data,
     skipAuth: true,
@@ -40,8 +40,9 @@ export async function register(data: RegisterRequest): Promise<AuthTokens> {
 }
 
 export async function checkEmailDuplicate(email: string): Promise<{ available: boolean }> {
-  return apiFetch<{ available: boolean }>(`/auth/email/check?email=${encodeURIComponent(email)}`, {
-    method: "GET",
+  return apiFetch<{ available: boolean }>("/auth/email/check", {
+    method: "POST",
+    body: { email },
     skipAuth: true,
   });
 }

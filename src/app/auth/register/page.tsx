@@ -83,8 +83,7 @@ export default function RegisterPage() {
       const tokens = await registerUser({
         email: data.email,
         password: data.password,
-        nickname: data.nickname,
-      });
+        });
       setAccessToken(tokens.accessToken);
       setRefreshToken(tokens.refreshToken);
       await refreshUser();
@@ -113,7 +112,7 @@ export default function RegisterPage() {
           <CardDescription>
             {step === 1 && "이메일을 입력하고 인증 코드를 받으세요"}
             {step === 2 && `${verifiedEmail}로 발송된 코드를 입력하세요`}
-            {step === 3 && "닉네임과 비밀번호를 설정하세요"}
+            {step === 3 && "비밀번호를 설정하세요"}
           </CardDescription>
 
           {/* Step Indicator */}
@@ -207,17 +206,6 @@ export default function RegisterPage() {
               <div className="space-y-1">
                 <Label>이메일</Label>
                 <Input value={verifiedEmail} disabled />
-              </div>
-              <div className="space-y-1">
-                <Label htmlFor="nickname">닉네임</Label>
-                <Input
-                  id="nickname"
-                  placeholder="닉네임 (2~20자)"
-                  {...registerForm.register("nickname")}
-                />
-                {registerForm.formState.errors.nickname && (
-                  <p className="text-xs text-destructive">{registerForm.formState.errors.nickname.message}</p>
-                )}
               </div>
               <div className="space-y-1">
                 <Label htmlFor="password">비밀번호</Label>
