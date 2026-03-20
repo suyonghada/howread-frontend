@@ -3,7 +3,7 @@ import { Book, BookSearchResponse, RegisterBookRequest } from "@/types/book";
 import { CursorPage, Page } from "@/types/api";
 
 export interface BookListParams {
-  query?: string;
+  title?: string;
   author?: string;
   isbn?: string;
   cursor?: number;
@@ -18,7 +18,7 @@ export async function searchBooks(query: string): Promise<BookSearchResponse[]> 
 
 export async function getBooks(params: BookListParams = {}): Promise<CursorPage<Book>> {
   const searchParams = new URLSearchParams();
-  if (params.query) searchParams.set("query", params.query);
+  if (params.title) searchParams.set("title", params.title);
   if (params.author) searchParams.set("author", params.author);
   if (params.isbn) searchParams.set("isbn", params.isbn);
   if (params.cursor !== undefined) searchParams.set("cursor", String(params.cursor));

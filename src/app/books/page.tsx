@@ -13,7 +13,7 @@ export default function BooksPage() {
   const [authorQuery, setAuthorQuery] = useState("");
   const [isbnQuery, setIsbnQuery] = useState("");
   const [activeParams, setActiveParams] = useState<{
-    query?: string;
+    title?: string;
     author?: string;
     isbn?: string;
   }>({});
@@ -21,7 +21,7 @@ export default function BooksPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setActiveParams({
-      query: titleQuery || undefined,
+      title: titleQuery || undefined,
       author: authorQuery || undefined,
       isbn: isbnQuery || undefined,
     });
