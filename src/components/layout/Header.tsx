@@ -1,14 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useAuth } from "@/store/auth";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BookOpen } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { LoginDialog } from "@/components/auth/LoginDialog";
 
 export function Header() {
   const { user, isAuthenticated, logout } = useAuth();
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -48,9 +52,12 @@ export function Header() {
             </>
           ) : (
             <>
-              <Link href="/auth/login" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+              <button
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+                onClick={() => setLoginOpen(true)}
+              >
                 로그인
-              </Link>
+              </button>
               <Link href="/auth/register" className={buttonVariants({ size: "sm" })}>
                 회원가입
               </Link>
@@ -58,6 +65,15 @@ export function Header() {
           )}
         </div>
       </div>
+
+      <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>로그인</DialogTitle>
+          </DialogHeader>
+          <LoginDialog onClose={() => setLoginOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
