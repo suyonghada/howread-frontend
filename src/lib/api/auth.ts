@@ -1,5 +1,5 @@
 import { apiFetch, setAccessToken, setRefreshToken } from "./client";
-import { AuthTokens, LoginRequest, RegisterRequest, EmailVerificationRequest, VerifyCodeRequest } from "@/types/auth";
+import { AuthTokens, LoginRequest, RegisterRequest, EmailVerificationRequest, VerifyCodeRequest, ResetPasswordRequest } from "@/types/auth";
 
 export async function login(data: LoginRequest): Promise<AuthTokens> {
   return apiFetch<AuthTokens>("/auth/login", {
@@ -57,6 +57,14 @@ export async function forgotPassword(email: string): Promise<void> {
   return apiFetch<void>("/auth/password/forgot", {
     method: "POST",
     body: { email },
+    skipAuth: true,
+  });
+}
+
+export async function resetPassword(data: ResetPasswordRequest): Promise<void> {
+  return apiFetch<void>("/auth/password/reset", {
+    method: "POST",
+    body: data,
     skipAuth: true,
   });
 }
