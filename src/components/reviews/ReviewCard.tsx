@@ -1,7 +1,7 @@
 "use client";
 
 import { Review } from "@/types/review";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "./LikeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -49,11 +49,9 @@ export function ReviewCard({ review, bookId, onEdit, onDelete }: ReviewCardProps
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={review.userProfileImageUrl ?? undefined} />
-            <AvatarFallback>{review.userNickname.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{review.userId}</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium">{review.userNickname}</p>
             <p className="text-xs text-muted-foreground">{formatRelativeTime(review.createdAt)}</p>
           </div>
         </div>
@@ -72,7 +70,7 @@ export function ReviewCard({ review, bookId, onEdit, onDelete }: ReviewCardProps
       <LikeButton
         bookId={bookId}
         reviewId={review.id}
-        isLiked={review.isLiked}
+        isLiked={review.isLikedByMe}
         likeCount={review.likeCount}
       />
     </div>

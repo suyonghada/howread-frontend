@@ -1,6 +1,5 @@
 import { apiFetch } from "./client";
-import { Review, ReviewSortType, CreateReviewRequest, UpdateReviewRequest } from "@/types/review";
-import { Page } from "@/types/api";
+import { Review, ReviewSortType, CreateReviewRequest, UpdateReviewRequest, ReviewPage } from "@/types/review";
 
 export interface ReviewListParams {
   sort?: ReviewSortType;
@@ -8,14 +7,14 @@ export interface ReviewListParams {
   size?: number;
 }
 
-export async function getReviews(bookId: number, params: ReviewListParams = {}): Promise<Page<Review>> {
+export async function getReviews(bookId: number, params: ReviewListParams = {}): Promise<ReviewPage> {
   const searchParams = new URLSearchParams();
   if (params.sort) searchParams.set("sort", params.sort);
   if (params.page !== undefined) searchParams.set("page", String(params.page));
   if (params.size !== undefined) searchParams.set("size", String(params.size));
 
   const qs = searchParams.toString();
-  return apiFetch<Page<Review>>(`/books/${bookId}/reviews${qs ? `?${qs}` : ""}`, {
+  return apiFetch<ReviewPage>(`/books/${bookId}/reviews${qs ? `?${qs}` : ""}`, {
     skipAuth: true,
   });
 }
@@ -56,10 +55,10 @@ export async function unlikeReview(bookId: number, reviewId: number): Promise<vo
   });
 }
 
-export async function getMyReviews(params: { page?: number; size?: number } = {}): Promise<Page<Review>> {
+export async function getMyReviews(params: { page?: number; size?: number } = {}): Promise<ReviewPage> {
   const searchParams = new URLSearchParams();
   if (params.page !== undefined) searchParams.set("page", String(params.page));
   if (params.size !== undefined) searchParams.set("size", String(params.size));
   const qs = searchParams.toString();
-  return apiFetch<Page<Review>>(`/users/me/reviews${qs ? `?${qs}` : ""}`);
+  return apiFetch<ReviewPage>(`/users/me/reviews${qs ? `?${qs}` : ""}`);
 }

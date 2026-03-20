@@ -75,14 +75,14 @@ export function ReviewList({ bookId }: ReviewListProps) {
     onError: () => toast.error("리뷰 삭제에 실패했습니다"),
   });
 
-  const reviews = data?.content ?? [];
-  const totalPages = data?.totalPages ?? 0;
+  const reviews = data?.data ?? [];
+  const totalPages = data ? Math.ceil(data.totalCount / 10) : 0;
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">
-          리뷰 {data?.totalElements !== undefined && `(${data.totalElements})`}
+          리뷰 {data?.totalCount !== undefined && `(${data.totalCount})`}
         </h2>
         <div className="flex gap-1">
           {SORT_OPTIONS.map((opt) => (

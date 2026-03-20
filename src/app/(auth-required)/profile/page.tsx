@@ -111,21 +111,21 @@ export default function ProfilePage() {
           ) : (
             <>
               <div className="space-y-3">
-                {reviewsData?.content.map((review) => (
+                {reviewsData?.data.map((review) => (
                   <ReviewCard
                     key={review.id}
                     review={review}
                     bookId={review.bookId}
                   />
                 ))}
-                {reviewsData?.content.length === 0 && (
+                {reviewsData?.data.length === 0 && (
                   <p className="text-center py-8 text-muted-foreground text-sm">
                     작성한 리뷰가 없습니다
                   </p>
                 )}
               </div>
 
-              {(reviewsData?.totalPages ?? 0) > 1 && (
+              {(reviewsData?.hasNext || page > 0) && (
                 <Pagination className="mt-4">
                   <PaginationContent>
                     <PaginationItem>
@@ -138,15 +138,15 @@ export default function ProfilePage() {
                     </PaginationItem>
                     <PaginationItem>
                       <span className="px-4 py-2 text-sm">
-                        {page + 1} / {reviewsData?.totalPages}
+                        {page + 1}
                       </span>
                     </PaginationItem>
                     <PaginationItem>
                       <PaginationNext
                         href="#"
-                        onClick={(e) => { e.preventDefault(); setPage((p) => Math.min((reviewsData?.totalPages ?? 1) - 1, p + 1)); }}
-                        aria-disabled={page >= (reviewsData?.totalPages ?? 1) - 1}
-                        className={page >= (reviewsData?.totalPages ?? 1) - 1 ? "pointer-events-none opacity-50" : ""}
+                        onClick={(e) => { e.preventDefault(); if (reviewsData?.hasNext) setPage((p) => p + 1); }}
+                        aria-disabled={!reviewsData?.hasNext}
+                        className={!reviewsData?.hasNext ? "pointer-events-none opacity-50" : ""}
                       />
                     </PaginationItem>
                   </PaginationContent>
@@ -155,6 +155,7 @@ export default function ProfilePage() {
             </>
           )}
         </TabsContent>
+
       </Tabs>
 
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
