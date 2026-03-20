@@ -1,9 +1,10 @@
 export interface User {
-  id: number;
   email: string;
   nickname: string;
   profileImageUrl: string | null;
+  role: string;
   createdAt: string;
+  lastLoginAt: string | null;
 }
 
 export interface UpdateNicknameRequest {

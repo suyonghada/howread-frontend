@@ -6,20 +6,17 @@ import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "./LikeButton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
-import { useAuth } from "@/store/auth";
 import Link from "next/link";
 
 interface ReviewCardProps {
   review: Review;
   bookId: number;
+  isOwner?: boolean;
   onEdit?: (review: Review) => void;
   onDelete?: (reviewId: number) => void;
 }
 
-export function ReviewCard({ review, bookId, onEdit, onDelete }: ReviewCardProps) {
-  const { user } = useAuth();
-  const isOwner = user?.id === review.userId;
-
+export function ReviewCard({ review, bookId, isOwner = false, onEdit, onDelete }: ReviewCardProps) {
   if (review.isBlurred) {
     return (
       <div className="relative border rounded-lg p-4 overflow-hidden">
