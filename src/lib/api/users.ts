@@ -7,21 +7,21 @@ export async function getMe(): Promise<User> {
 
 export async function updateNickname(data: UpdateNicknameRequest): Promise<User> {
   return apiFetch<User>("/users/me/nickname", {
-    method: "PATCH",
+    method: "PUT",
     body: data,
   });
 }
 
 export async function updatePassword(data: UpdatePasswordRequest): Promise<void> {
   return apiFetch<void>("/users/me/password", {
-    method: "PATCH",
+    method: "PUT",
     body: data,
   });
 }
 
-export async function uploadProfileImage(file: File): Promise<User> {
+export async function uploadProfileImage(file: File): Promise<string> {
   const formData = new FormData();
-  formData.append("image", file);
+  formData.append("file", file);
 
   // Cannot use apiFetch for FormData (Content-Type must not be set manually)
   const { getAccessToken } = await import("./client");
@@ -29,7 +29,7 @@ export async function uploadProfileImage(file: File): Promise<User> {
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080/api/v1";
 
   const res = await fetch(`${BASE_URL}/users/me/profile-image`, {
-    method: "POST",
+    method: "PUT",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: formData,
   });
@@ -38,9 +38,9 @@ export async function uploadProfileImage(file: File): Promise<User> {
   if (!json.success) {
     throw new Error(json.error?.message ?? "Upload failed");
   }
-  return json.data;
+  return json.data as string;
 }
 
 export async function deleteAccount(): Promise<void> {
-  return apiFetch<void>("/users/me", { method: "DELETE" });
+  return apiFetch<void>("/auth/withdraw", { method: "DELETE" });
 }
