@@ -11,19 +11,14 @@ export interface Book {
   ratingCount: number;
 }
 
-export interface KakaoBook {
+export interface BookSearchResponse {
   isbn: string;
   title: string;
-  authors: string[];
+  author: string;
   publisher: string;
-  datetime: string;
-  contents: string;
-  thumbnail: string;
-}
-
-export interface BookSearchResult {
-  books: KakaoBook[];
-  isEnd: boolean;
+  publishedDate: string;
+  thumbnailUrl: string;
+  description: string;
 }
 
 export interface RegisterBookRequest {
