@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Review } from "@/types/review";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatRelativeTime } from "@/lib/utils";
 import { LikeButton } from "./LikeButton";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,11 @@ import { LoginDialog } from "@/components/auth/LoginDialog";
 interface ReviewCardProps {
   review: Review;
   bookId: number;
-  isOwner?: boolean;
   onEdit?: (review: Review) => void;
   onDelete?: (reviewId: number) => void;
 }
 
-export function ReviewCard({ review, bookId, isOwner = false, onEdit, onDelete }: ReviewCardProps) {
+export function ReviewCard({ review, bookId, onEdit, onDelete }: ReviewCardProps) {
   const [loginOpen, setLoginOpen] = useState(false);
 
   if (review.isBlurred) {
@@ -66,13 +65,17 @@ export function ReviewCard({ review, bookId, isOwner = false, onEdit, onDelete }
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <Avatar className="h-8 w-8">
-            <AvatarFallback>{review.userId}</AvatarFallback>
+            <AvatarImage src={review.profileImageUrl ?? undefined} alt={review.nickname ?? undefined} />
+            <AvatarFallback>
+              {review.nickname ? review.nickname.charAt(0).toUpperCase() : "?"}
+            </AvatarFallback>
           </Avatar>
           <div>
+            <p className="text-sm font-medium">{review.nickname ?? "알 수 없음"}</p>
             <p className="text-xs text-muted-foreground">{formatRelativeTime(review.createdAt)}</p>
           </div>
         </div>
-        {isOwner && (
+        {review.isOwner && (
           <div className="flex gap-1">
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => onEdit?.(review)}>
               <Pencil className="h-3.5 w-3.5" />
