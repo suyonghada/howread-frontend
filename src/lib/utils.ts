@@ -5,17 +5,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+function toUtcDate(dateString: string): Date {
+  return new Date(dateString.endsWith("Z") ? dateString : dateString + "Z");
+}
+
 export function formatDate(dateString: string): string {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  }).format(new Date(dateString));
+  }).format(toUtcDate(dateString));
 }
 
 export function formatRelativeTime(dateString: string): string {
   const now = new Date();
-  const date = new Date(dateString);
+  const date = toUtcDate(dateString);
   const diffMs = now.getTime() - date.getTime();
   const diffSec = Math.floor(diffMs / 1000);
   const diffMin = Math.floor(diffSec / 60);
