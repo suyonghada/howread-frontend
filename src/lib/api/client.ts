@@ -53,7 +53,9 @@ async function doRefresh(): Promise<string> {
   }
 
   setAccessToken(json.data.accessToken);
-  setRefreshToken(json.data.refreshToken);
+  if (json.data.refreshToken) {
+    setRefreshToken(json.data.refreshToken);
+  }
   return json.data.accessToken;
 }
 

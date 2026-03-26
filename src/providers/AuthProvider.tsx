@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const tokens = await authApi.refreshSession();
         setAccessToken(tokens.accessToken);
-        setRefreshToken(tokens.refreshToken);
+        // 백엔드 /auth/refresh는 accessToken만 반환하므로 refreshToken은 기존 값 유지
         const me = await usersApi.getMe();
         setUser(me);
       } catch {
