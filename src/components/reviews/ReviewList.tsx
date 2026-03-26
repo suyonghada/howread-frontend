@@ -35,15 +35,16 @@ interface ReviewListProps {
 }
 
 export function ReviewList({ bookId }: ReviewListProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const [sort, setSort] = useState<ReviewSortType>("LIKES_DESC");
   const [page, setPage] = useState(0);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["reviews", bookId, sort, page],
+    queryKey: ["reviews", bookId, sort, page, isAuthenticated],
     queryFn: () => getReviews(bookId, { sort, page, size: 10 }),
+    enabled: !authLoading,
   });
 
   const createMutation = useMutation({
