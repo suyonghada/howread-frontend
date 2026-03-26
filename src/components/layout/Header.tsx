@@ -9,9 +9,10 @@ import { BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LoginDialog } from "@/components/auth/LoginDialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function Header() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [loginOpen, setLoginOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -38,7 +39,9 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          {isAuthenticated ? (
+          {isLoading ? (
+            <Skeleton className="h-8 w-32" />
+          ) : isAuthenticated ? (
             <>
               <Link href="/profile">
                 <Avatar className="h-8 w-8 cursor-pointer">
