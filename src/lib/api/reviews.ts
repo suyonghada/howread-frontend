@@ -29,26 +29,26 @@ export async function updateReview(
   reviewId: number,
   data: UpdateReviewRequest
 ): Promise<Review> {
-  return apiFetch<Review>(`/books/${bookId}/reviews/${reviewId}`, {
+  return apiFetch<Review>(`/reviews/${reviewId}`, {
     method: "PUT",
     body: data,
   });
 }
 
 export async function deleteReview(bookId: number, reviewId: number): Promise<void> {
-  return apiFetch<void>(`/books/${bookId}/reviews/${reviewId}`, {
+  return apiFetch<void>(`/reviews/${reviewId}`, {
     method: "DELETE",
   });
 }
 
 export async function likeReview(bookId: number, reviewId: number): Promise<void> {
-  return apiFetch<void>(`/books/${bookId}/reviews/${reviewId}/like`, {
+  return apiFetch<void>(`/reviews/${reviewId}/likes`, {
     method: "POST",
   });
 }
 
 export async function unlikeReview(bookId: number, reviewId: number): Promise<void> {
-  return apiFetch<void>(`/books/${bookId}/reviews/${reviewId}/like`, {
+  return apiFetch<void>(`/reviews/${reviewId}/likes`, {
     method: "DELETE",
   });
 }

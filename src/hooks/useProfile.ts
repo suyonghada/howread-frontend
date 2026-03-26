@@ -25,8 +25,8 @@ export function useProfile() {
 
   const uploadImageMutation = useMutation({
     mutationFn: (file: File) => uploadProfileImage(file),
-    onSuccess: () => {
-      refreshUser();
+    onSuccess: async () => {
+      await refreshUser();
       toast.success("프로필 이미지가 변경되었습니다");
     },
     onError: () => toast.error("이미지 업로드에 실패했습니다"),
