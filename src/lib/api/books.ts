@@ -39,6 +39,10 @@ export async function registerBook(data: RegisterBookRequest): Promise<Book> {
   });
 }
 
+export async function deleteBook(bookId: number): Promise<void> {
+  return apiFetch<void>(`/books/${bookId}`, { method: "DELETE" });
+}
+
 export async function getRecentBooks(size = 8): Promise<Book[]> {
   const result = await apiFetch<CursorPage<Book>>(`/books?size=${size}`, { skipAuth: true });
   return result.data;

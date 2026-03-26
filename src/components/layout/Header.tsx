@@ -36,6 +36,11 @@ export function Header() {
           <Link href="/books" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             도서 목록
           </Link>
+          {user?.role === "ADMIN" && (
+            <Link href="/admin/users" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              관리자
+            </Link>
+          )}
         </nav>
 
         <div className="ml-auto flex items-center gap-2">

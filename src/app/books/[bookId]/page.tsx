@@ -1,9 +1,9 @@
 "use client";
 
-import { use } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { use, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { getBook } from "@/lib/api/books";
+import { getBook, deleteBook } from "@/lib/api/books";
 import { useRating } from "@/hooks/useRating";
 import { useAuth } from "@/store/auth";
 import { StarRating } from "@/components/books/StarRating";
@@ -11,8 +11,16 @@ import { ReviewList } from "@/components/reviews/ReviewList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Image from "next/image";
-import { BookOpen, Star } from "lucide-react";
+import { BookOpen, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDate, getHighResAladinThumbnail } from "@/lib/utils";
 
@@ -23,13 +31,27 @@ interface BookDetailPageProps {
 export default function BookDetailPage({ params }: BookDetailPageProps) {
   const { bookId } = use(params);
   const id = parseInt(bookId, 10);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { data: book, isLoading, isError } = useQuery({
     queryKey: ["book", id],
     queryFn: () => getBook(id),
     enabled: !!id,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteBook(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+      toast.success("책이 삭제되었습니다");
+      router.push("/books");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "책 삭제에 실패했습니다");
+    },
   });
 
   const { myRating, upsertMutation } = useRating(id);
@@ -102,7 +124,19 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
         </div>
 
         <div className="flex-1 space-y-3">
-          <h1 className="text-2xl font-bold">{book.title}</h1>
+          <div className="flex items-start justify-between gap-2">
+            <h1 className="text-2xl font-bold">{book.title}</h1>
+            {user?.role === "ADMIN" && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-destructive shrink-0"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
           <p className="text-muted-foreground">
             {book.author} · {book.publisher}
           </p>
@@ -148,6 +182,34 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
 
       {/* Reviews */}
       <ReviewList bookId={id} />
+
+      {/* 책 삭제 확인 다이얼로그 */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>책 삭제</DialogTitle>
+            <DialogDescription>
+              <strong>{book.title}</strong>을(를) 삭제하시겠습니까?
+              이 작업은 되돌릴 수 없습니다.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              취소
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                deleteMutation.mutate();
+              }}
+              disabled={deleteMutation.isPending}
+            >
+              삭제
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
